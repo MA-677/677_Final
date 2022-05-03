@@ -1,0 +1,23 @@
+---
+title: "Rain Data"
+author: "Lauren Temple"
+date: "5/2/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source(file= "Rainfall.R")
+```
+
+```{r}
+point5f5
+```
+
+
+```{r}
+plotdist(tidy_data$values, histo = TRUE, demp = TRUE)
+```
+
+# Distribution Choice Discussion
+Gamma has lower KS and AD stats as well as better fitting pp plot and qq plot. The exponential distribution is a tempting choice because it has a well fitting density plot. Exponential captures the large number of values that are close to zero. 
