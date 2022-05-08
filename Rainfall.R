@@ -1,5 +1,5 @@
 #due when final exam is scheduled to be over
-pacman::p_load(readxl, tidyverse, dplyr, fitdistrplus)
+pacman::p_load(readxl, tidyverse, dplyr, fitdistrplus, boot)
 rain_data <- read_excel("Illinois_rain_1960-1964(1).xlsx")
 #average rainfall in inches for each storm
 
@@ -56,16 +56,19 @@ denscomp(wModel)
 
 #decision to move forward with gamma
 
-#wet vs dry years
-avg_1960 <- rain_data[1:48, 1]
-avg_1960 <- mean(avg_1960$'1960')
-avg_1961 <- rain_data[1:48, 2]
-avg_1961 <- mean(avg_1961$'1961')
-avg_1962 <- rain_data[1:56, 3]
-avg_1962 <- mean(avg_1962$'1962')
-avg_1963 <- rain_data[1:37, 4]
-avg_1963 <- mean(avg_1963$'1963')
-avg_1964 <- rain_data[1:38, 5]
-avg_1964 <- mean(avg_1964$'1964')
+mledist(tidy_data$values, 'gamma')
+#estimate: parameter estimates
+#Shape: 0.4408386
+#Rate: 1.9648409
 
-avg_df <- data.frame(avg_1960, avg_1961, avg_1962, avg_1963, avg_1964)
+sim_values <- rgamma(227, 0.4408386, 1.9648409) %>% round(3)
+sim_year <- rep(c(1960, 1961, 1962, 1963, 1964), times=c(48, 48, 56, 37, 38))
+sim_data <- data.frame(sim_values, sim_year, storm_n)
+
+hist(sim_data$sim_values)
+
+comp_data <- cbind(tidy_data, sim_values)
+ggplot(comp_data) + geom_point(aes(x = storm_n, y = values, color = "blue")) + 
+  geom_point(aes(x = storm_n, y = sim_values, color = "red"))
+
+#random gamma generated data appears to fit well with the rain data
