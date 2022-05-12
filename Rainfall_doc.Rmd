@@ -86,25 +86,38 @@ Here is a box plot comparison of the two datasets. The simulated Gamma data matc
 
 #Wet vs Dry years
 
-I began examining Wet vs Dry years by looking at a violin plot of the data. Looking at this plot we can see that a majority of the data points sit at low values each year. 1960, 1962, and 1964 have the highest density of low value rainfall points. 
-
-```{r}
-ggvio
-```
-
-```{r}
-ggbox
-```
+Determining a wet vs dry year from a small dataset such as this one is difficult. I began examining Wet vs Dry years by looking at the summary statistics of the data. I started off with the tidy version of that data that I created. 
 
 ```{r}
 summary(tidy_data)
 ```
 
+From this summary table I gathered that the mean rainfall across all five years was 0.2244. I can use that as a benchmark and judge the other years off of that average to determine if they are wet or dry years. I also was able to clearly see the number of storms per year. We can see that 1962 has the most storms and 1963 has the least number of storms. The storm_n column of this summary table is not meaningful as it is creating summary stats based off the cumulative number of the storm over the years. After looking at the tidy data I decided to go back to the original data set to get more in depth summary stats on each year of rainfall. I will keep in mind the overall average rainfall is 0.2244 and 1962 had the highest number of storms. 
+
 ```{r}
 summary(rain_data)
 ```
 
+From this summary table we can see that 1961 and 1963 are the only two years with mean rainfall values over 0.2244. If we use that metric to determine wet vs dry years then 1961 and 1963 were wet years and 1960, 1962, 1964 were dry years. As a reminder, 1962 had the greatest number of storms, however this does not mean that they had the greatest amount of rainfall, in fact 1962 has the lowest mean value of rainfall. After looking at these summary stats I decided to dig deeper into the distribution of rainfall each year. 
+
+
+```{r}
+ggvio
+```
+
+I chose to examine the distribution of rainfall each year with a violin plot of the data. Looking at this plot we can see that a majority of the data points sit at low values each year. 1960, 1962, and 1964 have the largest density of low value rainfall points. This lines up with our finding that 1962 had the highest number of storms but not a high average value of rainfall. We can see that apart from one data point at about 2 inches, the rest of the rainfall data for 1962 lies below 1 inch and a majority of it lies below 0.5 inches. Another observation we can make it that all of the years share similar shapes of density distributions. We see the most similarity between 1960, 1962.  We might assume that the rainfall these two years was similar. 
+
+```{r}
+ggbox
+```
+The boxplot representation of the data gives us an idea of the distribution and their possible outliers. We can see that all of the years are very similar with 1961 having the largest spread of data within its 1st through 3rd quartiles. We can also see that a majority of the data falls under 0.5.
+
+
 ```{r}
 rain_summarydf
 ```
+Going back to a summary table, I created this one to show the total rainfall, the mean rainfall, and the number of storms each year. Given what we already know from looking at other summary tables and the violin plot we can confirm that 1961 is our best candidate for the wettest year. Although 1961 did not have the greatest number of storms it did have the most rain during the storms that did occur. I think that is a better measure of wet vs dry than just looking at the number of storms. I do not feel confident in labeling the other years wet or dry. I think they are all too similar to distinguish with the amount of data that we have. 
 
+# Conclusion
+
+I think that the results pertaining to the Gamma distribution will only generalize to other years of rainfall in Illinois. I also think that as we continue to get further from the original years in this data set that the results will generalize less and less due to the ever changing climate of this planet. Although these changes may be gradual they will impact the generalizability of the data analysis from this dataset. This project has provided me with the opportunity to dig into a novel dataset and discover its distribution as well as think critically about how well it applies to the actual data and how it can be used. I think the next steps would be to obtain more data and see if the parameters of this distribution are a good fit for that data as well. I think that as more data is collected the parameters will change and become better tuned to the actual dataset. I also feel that with more data we would be able to better determine wet vs dry years. 
