@@ -7,7 +7,7 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-source(file= "Rainfall.R")
+source(file= "Temple_Rainfall.R")
 ```
 
 # Intro

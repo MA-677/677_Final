@@ -1,4 +1,7 @@
-#due when final exam is scheduled to be over
+#Lauren Temple 
+#MA 677 Final Project
+
+
 pacman::p_load(readxl, tidyverse, dplyr, fitdistrplus, boot)
 rain_data <- read_excel("Illinois_rain_1960-1964(1).xlsx")
 #average rainfall in inches for each storm
