@@ -10,14 +10,87 @@ knitr::opts_chunk$set(echo = TRUE)
 source(file= "Rainfall.R")
 ```
 
+# Intro
+
+This project is an exploration of the rainfall data collected in Southern Illionis between 1960 and 1964. In this report I will explore the distribution, fit a distribution to the data, simulate data using the parameters of the found distribution, and identify wet vs dry years. 
+
+# EDA
+
 ```{r}
-point5f5
+point
 ```
 
+From this scatter plot we can see that the rainfall data across years appears to be similar. A majority of that data points are clustered at very low values close to zero, with a decrease in density as the rainfall value increases. 
 
 ```{r}
-plotdist(tidy_data$values, histo = TRUE, demp = TRUE)
+gghisto
+```
+We see this phenomenon reflected in our histogram of the rainfall values. The distribution is heavily right tailed with most values lying between 0.0 and 0.5.
+
+```{r}
+ggdens
+```
+As we take a look at the density plot we can confirm our observations about the distribution of this dataset. We will need to find a distribution that is able to accurately represent this aspect of the data. 
+
+#Finding a distribution
+
+I began by creating a Cullen and Frey graph to get an idea of which distributions might work well for this dataset.
+
+```{r}
+descdist(tidy_data$values, boot = 1000)
 ```
 
-# Distribution Choice Discussion
-Gamma has lower KS and AD stats as well as better fitting pp plot and qq plot. The exponential distribution is a tempting choice because it has a well fitting density plot. Exponential captures the large number of values that are close to zero. 
+From this graph I decided to try Exponential, Gamma, and Weibull. I examined the goodness of fit statistics of each distribution, focusing on the KS and AD stats. I found that the Gamma distribution had the smallest KS and AD stats. I also examined the qqplot, pplot, density plot, and cdf plot for each distribution. The Gamma distribution also had the best fitting qq and pp plots. The exponential distribution had the best fitting density plot, however given the overall better fit of the Gamma distribution, I decided to go with that. Once I had decided on the Gamma distribution I did some research on what the Gamma distribution is typically used to model and found that rainfall data is one of its common uses. Below are the results from my Gamma distribution model fitting with fitdist. 
+
+
+```{r}
+gModel <- fitdist(tidy_data$values, "gamma")
+gofstat(gModel) ##lower KS and AD stat than exp
+```
+
+```{r}
+gModel$estimate
+```
+
+```{r}
+qqcomp(gModel)
+cdfcomp(gModel)
+ppcomp(gModel)
+denscomp(gModel)
+```
+
+From there I moved on to estimating the parameters of the distribution. I used mledist to do this. I found that the shape of the distribution is about 0.44 and the rate is about 1.96. I used these parameters to simulate some gamma distributed data and compare that with the actual rain data values. 
+```{r}
+mledist(tidy_data$values, 'gamma')
+#estimate: parameter estimates
+#Shape: 0.4408386
+#Rate: 1.9648409
+```
+
+```{r}
+point_comp
+```
+Here I plotted a scatter plot of the two distributions on top of each other to make sure that there was no obvious grouping of data in one dataset that is not present in the other. I found that the simulated data fits well among the actual rainfall data. 
+
+```{r}
+dense_comp
+```
+
+When looking at the comparison of the density plots between the actual rainfall data and simulated data we can see that the Gamma distribution does not quite capture the amount of zero values that are in the actual data but it does capture the general density of the data well. 
+
+```{r}
+box_comp
+```
+
+Here is a box plot comparison of the two datasets. The simulated Gamma data matches well with the actual rainfall data. A noteable exception is that the simulated data does have a maximum point of about 3 whereas the rainfall data only reaches values of about 2. However even with that point in the dataset, the quantiles match up well. 
+
+#Wet vs Dry years
+
+I began examining Wet vs Dry years by looking at a violin plot of the data. 
+```{r}
+ggvio
+```
+
+```{r}
+ggbox
+```

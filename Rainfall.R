@@ -9,18 +9,25 @@ storm_n <- c(1:227)
 tidy_data <- cbind(tidy_data, storm_n)
 
 #EDA visualization
-point <- ggplot(tidy_data) + geom_point(aes(storm_n, values, color= Year)) + labels()
+point <- ggplot(tidy_data) + geom_point(aes(storm_n, values, color= Year)) ; point
 
-hist(tidy_data$values)
+gghisto <- ggplot(tidy_data) + geom_histogram(aes(x = values), bins = 50) + ggtitle('Histogram of Rainfall Data') ; gghisto
+
+ggdens <- ggplot(tidy_data) + geom_density(aes(x= values)) ; ggdens
+
+ggbox <- ggplot(tidy_data) + geom_boxplot(aes(x = Year, y= values, color = Year)) + theme(legend.position = "none") ; ggbox
+
+ggvio <- ggplot(tidy_data) + geom_violin(aes(x = Year, y= values, color = Year)) + 
+  geom_jitter(aes(x= Year, y= values), shape=16, position=position_jitter(0.1)) + 
+  theme(legend.position = "none") ; ggvio
+
 
 plotdist(tidy_data$values, histo = TRUE, demp = TRUE)
-#there are a lot values close to 0, find a distribution that deals well with this
+#there are a lot values close to 0, find a distribution that deals well with this phenomenon
 
-#consider removing them?
-set.seed(42)
 descdist(tidy_data$values, boot = 1000)
 
-#trying out different distributions
+#Trying out different distributions
 
 #exponential
 eModel <- fitdist(tidy_data$values, "exp")
@@ -56,19 +63,30 @@ denscomp(wModel)
 
 #decision to move forward with gamma
 
+#estimate parameters
 mledist(tidy_data$values, 'gamma')
 #estimate: parameter estimates
 #Shape: 0.4408386
 #Rate: 1.9648409
 
+#simulate data based on those parameters
+
 sim_values <- rgamma(227, 0.4408386, 1.9648409) %>% round(3)
 sim_year <- rep(c(1960, 1961, 1962, 1963, 1964), times=c(48, 48, 56, 37, 38))
 sim_data <- data.frame(sim_values, sim_year, storm_n)
 
-hist(sim_data$sim_values)
+#compare the simulated data with actual data
 
 comp_data <- cbind(tidy_data, sim_values)
-ggplot(comp_data) + geom_point(aes(x = storm_n, y = values, color = "blue")) + 
-  geom_point(aes(x = storm_n, y = sim_values, color = "red"))
 
-#random gamma generated data appears to fit well with the rain data
+point_comp <- ggplot(comp_data) + geom_point(aes(x = storm_n, y = values, color = "blue")) + 
+  geom_point(aes(x = storm_n, y = sim_values, color = "red")) + labs(color = "Data") + 
+  scale_color_manual(labels = c("Actual", "Simulated"), values = c("cornflowerblue", "tomato")); point_comp
+
+dense_comp <- ggplot(comp_data) + geom_density(aes(x = values, color = "blue")) + 
+  geom_density(aes(x = sim_values, color = "red")) + labs(color = "Data") + 
+  scale_color_manual(labels = c("Actual", "Simulated"), values = c("cornflowerblue", "tomato")); dense_comp
+
+box_comp <- ggplot(comp_data) + geom_boxplot(aes(x = Year, y = values, color = "blue")) + 
+  geom_boxplot(aes(x = Year, y = sim_values, color = "red")) + labs(color = "Data") + 
+  scale_color_manual(labels = c("Actual", "Simulated"), values = c("cornflowerblue", "tomato")); box_comp
