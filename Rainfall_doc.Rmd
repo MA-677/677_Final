@@ -82,11 +82,12 @@ When looking at the comparison of the density plots between the actual rainfall 
 box_comp
 ```
 
-Here is a box plot comparison of the two datasets. The simulated Gamma data matches well with the actual rainfall data. A noteable exception is that the simulated data does have a maximum point of about 3 whereas the rainfall data only reaches values of about 2. However even with that point in the dataset, the quantiles match up well. 
+Here is a box plot comparison of the two datasets. The simulated Gamma data matches well with the actual rainfall data. A noteable exception is that the simulated data does have a maximum point of about 3 whereas the rainfall data only reaches values of about 2. 
 
 #Wet vs Dry years
 
-I began examining Wet vs Dry years by looking at a violin plot of the data. 
+I began examining Wet vs Dry years by looking at a violin plot of the data. Looking at this plot we can see that a majority of the data points sit at low values each year. 1960, 1962, and 1964 have the highest density of low value rainfall points. 
+
 ```{r}
 ggvio
 ```
@@ -94,3 +95,16 @@ ggvio
 ```{r}
 ggbox
 ```
+
+```{r}
+summary(tidy_data)
+```
+
+```{r}
+summary(rain_data)
+```
+
+```{r}
+rain_summarydf
+```
+

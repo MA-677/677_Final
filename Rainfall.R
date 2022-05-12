@@ -90,3 +90,28 @@ dense_comp <- ggplot(comp_data) + geom_density(aes(x = values, color = "blue")) 
 box_comp <- ggplot(comp_data) + geom_boxplot(aes(x = Year, y = values, color = "blue")) + 
   geom_boxplot(aes(x = Year, y = sim_values, color = "red")) + labs(color = "Data") + 
   scale_color_manual(labels = c("Actual", "Simulated"), values = c("cornflowerblue", "tomato")); box_comp
+
+#Wet vs Dry
+
+summary(tidy_data)
+
+summary(rain_data)
+
+#create summary tibble
+
+sum_values <- c(sum(rain_data$`1960`, na.rm = T),
+                sum(rain_data$`1961`, na.rm = T),
+                sum(rain_data$`1962`, na.rm = T),
+                sum(rain_data$`1963`, na.rm = T),
+                sum(rain_data$`1964`, na.rm = T))
+
+m_values <- c(mean(rain_data$`1960`, na.rm = T),
+              mean(rain_data$`1961`, na.rm = T),
+              mean(rain_data$`1962`, na.rm = T),
+              mean(rain_data$`1963`, na.rm = T),
+              mean(rain_data$`1964`, na.rm = T))
+
+rain_summarydf <- data.frame(Years = c(1960, 1961, 1962, 1963, 1964), sum = sum_values, mean = m_values, 
+                             storm_n = c(48, 48, 56, 37, 38))
+
+
